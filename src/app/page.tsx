@@ -1,22 +1,9 @@
 import Input from "@/components/Input";
 import LinksTable from "@/components/LinksTable";
 
-/* eslint-disable @next/next/no-img-element */
 export default function Home() {
   return (
-    <div className="w-full min-h-screen relative flex flex-col">
-      <img
-        src="/swirl.png"
-        alt="Swirl Image"
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      />
-      <img
-        src="/cubes.png"
-        alt="Cubes Image"
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      />
-
-      {/* hero section — takes full screen height, centered */}
+    <div className="w-full min-h-screen flex flex-col">
       <div className="z-10 w-full h-screen flex flex-col items-center justify-center gap-6 px-10 mb-[-150]">
         <h1
           className="bg-clip-text text-transparent font-bold text-5xl text-center"

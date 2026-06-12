@@ -38,10 +38,10 @@ const links = [
 
 const LinksTable = () => {
   return (
-    <div className="w-fullrounded-xl">
+    <div className="w-full">
       <table className="w-full text-sm text-left text-[#C9CED6]">
         <thead>
-          <tr className="bg-[#181E29] border-b border-[#353C4A]">
+          <tr className="bg-[#181E29] border-b border-[#353C4A] rounded-xl">
             <th className="py-4 px-4 font-medium">Short Link</th>
             <th className="py-4 px-4 font-medium">Original Link</th>
             <th className="py-4 px-4 font-medium">QR Code</th>

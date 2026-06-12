@@ -6,6 +6,9 @@ import { connectDB } from "./mongodb";
 import { AdapterUser } from "next-auth/adapters";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: "/auth/signin",
+  },
   providers: [
     Credentials({
       credentials: {
@@ -17,12 +20,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null;
         await connectDB();
 
-        const user = await User.findOne({ email: credentials.email });
+        const user = await User.findOne({ email: credentials.email as string });
         if (!user) return null;
 
         const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password,
+          credentials.password as string,
+          user.password as string,
         );
         if (!isValid) return null;
 
