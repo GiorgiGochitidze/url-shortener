@@ -1,7 +1,7 @@
 // src/lib/auth.config.ts
 import Credentials from "next-auth/providers/credentials";
 import { User } from "./models/User";
-import * as bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { connectDB } from "./mongodb";
 import { AdapterUser } from "next-auth/adapters";
 import type { NextAuthConfig } from "next-auth";

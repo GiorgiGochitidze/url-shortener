@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/mongodb"
 import { User } from "@/lib/models/User"
-import * as bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   const { email, password } = await req.json()
