@@ -10,7 +10,8 @@ const SAMPLE_LINKS: LinkItem[] = [
     originalUrl: "https://www.twitter.com/tweets/8erelCsihu/",
     clicksCount: 1313,
     status: "Active",
-    createdAt: "Oct - 10 - 2023",
+    createdAt: "2026-06-12T12:00:00.000Z",
+    expiresAt: "2026-06-13T12:00:00.000Z",
   },
   {
     _id: "sample-2",
@@ -18,15 +19,8 @@ const SAMPLE_LINKS: LinkItem[] = [
     originalUrl: "https://www.youtube.com/watch?v=8J7ZimHOXuia",
     clicksCount: 4313,
     status: "Inactive",
-    createdAt: "Oct - 08 - 2023",
-  },
-  {
-    _id: "sample-3",
-    slug: "Ks91wALm",
-    originalUrl: "https://www.adventurewanderlust.com/",
-    clicksCount: 1013,
-    status: "Active",
-    createdAt: "Oct - 01 - 2023",
+    createdAt: "2026-06-11T12:00:00.000Z",
+    expiresAt: "2026-06-12T12:00:00.000Z",
   },
 ];
 
@@ -44,6 +38,7 @@ interface LinkItem {
   clicks?: ClickItem[];
   clicksCount?: number;
   status?: string;
+  expiresAt?: string | null; 
   createdAt: string;
   updatedAt?: string;
 }
@@ -51,7 +46,7 @@ interface LinkItem {
 interface LinksTableProps {
   isSample?: boolean;
   extraLinks?: LinkItem[];
-  onLinkDeleted?: (id: string) => void; // ✅ Declared missing callback type prop
+  onLinkDeleted?: (id: string) => void;
 }
 
 const LinksTable = ({
@@ -64,7 +59,7 @@ const LinksTable = ({
   );
   const [loading, setLoading] = useState<boolean>(!isSample);
   const [error, setError] = useState<string>("");
-  const [deletingId, setDeletingId] = useState<string | null>(null); // ✅ Fixed missing state hook
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isSample) return;
@@ -159,11 +154,11 @@ const LinksTable = ({
           <tr className="bg-[#181E29] [&_th]:min-w-25 border-b border-[#353C4A]">
             <th className="py-4 px-4 font-medium">Short Link</th>
             <th className="py-4 px-4 font-medium">Original Link</th>
-            <th className="py-4 px-4 font-medium">QR Code</th>
             <th className="py-4 px-4 font-medium">Clicks</th>
             <th className="py-4 px-4 font-medium">Status</th>
-            <th className="py-4 px-4 font-medium">Date</th>
-            <th className="py-4 px-4 font-medium text-center">Actions</th>{" "}
+            <th className="py-4 px-4 font-medium">Created Date</th>
+            <th className="py-4 px-4 font-medium">Expires At</th>{" "}
+            <th className="py-4 px-4 font-medium text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -177,15 +172,32 @@ const LinksTable = ({
             const totalClicks = link.clicks
               ? link.clicks.length
               : link.clicksCount || 0;
-            const isActive = link.status ? link.status === "Active" : true;
 
-            const displayDate = link.createdAt.includes("T")
+            // Live status checks against the current time
+            const isExpired = link.expiresAt
+              ? new Date() > new Date(link.expiresAt)
+              : false;
+            const isActive =
+              link.status === "Inactive" || isExpired ? false : true;
+
+            // Formatting Created Date
+            const displayCreatedDate = link.createdAt.includes("T")
               ? new Date(link.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   day: "2-digit",
                   year: "numeric",
                 })
               : link.createdAt;
+
+            const displayExpiresDate = link.expiresAt
+              ? new Date(link.expiresAt).toLocaleString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "Never";
 
             return (
               <tr
@@ -223,19 +235,6 @@ const LinksTable = ({
                   </span>
                 </td>
 
-                <td className="py-4 px-4">
-                  <div className="w-8 h-8 bg-white rounded p-1 shadow-sm select-none opacity-80">
-                    <div className="w-full h-full grid grid-cols-3 gap-0.5">
-                      {Array.from({ length: 9 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={`rounded-sm ${i % 2 === 0 || i === 7 ? "bg-black" : "bg-white"}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </td>
-
                 <td className="py-4 px-4 text-white font-mono">
                   {totalClicks}
                 </td>
@@ -256,7 +255,13 @@ const LinksTable = ({
                 </td>
 
                 <td className="py-4 px-4 text-[#C9CED6] text-xs font-mono">
-                  {displayDate}
+                  {displayCreatedDate}
+                </td>
+
+                <td
+                  className={`py-4 px-4 text-xs font-mono ${isExpired ? "text-red-400/80" : "text-amber-400/90"}`}
+                >
+                  {displayExpiresDate}
                 </td>
 
                 <td className="py-4 px-4 text-center">

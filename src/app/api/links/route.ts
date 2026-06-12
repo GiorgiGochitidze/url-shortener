@@ -4,6 +4,7 @@ import { Link } from "@/lib/models/Link";
 import { nanoid } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
 
+
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -16,10 +17,16 @@ export async function POST(req: Request) {
   await connectDB();
 
   const slug = nanoid(5);
+
+  // 24 hours * 60 mins * 60 secs * 1000 milliseconds
+  const twentyFourHoursFromNow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
   const link = await Link.create({
     slug,
     originalUrl: url,
     userId: session.user.id,
+    status: "Active",                    
+    expiresAt: twentyFourHoursFromNow,
   });
 
   return Response.json({
@@ -35,10 +42,9 @@ export async function GET() {
   }
 
   await connectDB();
-  const links = await Link.find({ userId: session.user.id });
+  const links = await Link.find({ userId: session.user.id }).sort({ createdAt: -1 }); // Sorted newest first!
   return Response.json({ links });
 }
-
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -47,7 +53,12 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json().catch(() => ({}));
+    const text = await req.text();
+    if (!text) {
+      return NextResponse.json({ error: "Empty request body payload" }, { status: 400 });
+    }
+    
+    const body = JSON.parse(text);
     const linkId = body.id;
 
     if (!linkId) {

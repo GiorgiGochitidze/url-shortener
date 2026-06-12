@@ -11,8 +11,24 @@ export async function GET(
   try {
     await connectDB();
 
-    const link = await Link.findOneAndUpdate(
-      { slug: slug },
+    // 1. Fetch link configurations first to analyze dates safely
+    const link = await Link.findOne({ slug });
+
+    if (!link) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    // Evaluate if the link is past its expiration deadline
+    const isExpired = link.expiresAt ? new Date() > new Date(link.expiresAt) : false;
+
+    if (link.status === "Inactive" || isExpired) {
+      // Bounce to the homepage or custom error screen because the link is dead
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    // 2. If valid, append click metadata details securely
+    await Link.updateOne(
+      { _id: link._id },
       {
         $push: {
           clicks: {
@@ -21,13 +37,8 @@ export async function GET(
             userAgent: req.headers.get("user-agent") ?? "Unknown",
           },
         },
-      },
-      { new: true }
+      }
     );
-
-    if (!link) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
 
     let targetUrl = link.originalUrl.trim();
 

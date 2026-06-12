@@ -10,6 +10,8 @@ export interface ILink extends Document {
   slug: string;
   originalUrl: string;
   userId: string;
+  status: string;
+  expiresAt?: Date | null; 
   clicks: IClick[];
   createdAt: Date;
 }
@@ -25,6 +27,8 @@ const LinkSchema = new Schema<ILink>(
     slug: { type: String, required: true, unique: true },
     originalUrl: { type: String, required: true },
     userId: { type: String, required: true },
+    status: { type: String, default: "Active" },
+    expiresAt: { type: Date, default: null },
     clicks: { type: [ClickSchema], default: [] },
   },
   { timestamps: true },
