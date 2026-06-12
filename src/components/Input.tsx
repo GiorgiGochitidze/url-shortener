@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FiLink, FiCopy, FiCheck, FiArrowUp } from "react-icons/fi";
 
 interface ClickItem {
@@ -18,6 +17,7 @@ interface LinkItem {
   clicks?: ClickItem[];
   clicksCount?: number;
   status?: string;
+  expiresAt?: string | null; 
   createdAt: string;
   updatedAt?: string;
 }
@@ -27,7 +27,6 @@ interface InputProps {
 }
 
 const Input = ({ onLinkAdded }: InputProps) => {
-  const router = useRouter();
   const [url, setUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [shortenedUrl, setShortenedUrl] = useState<string>("");
@@ -70,10 +69,10 @@ const Input = ({ onLinkAdded }: InputProps) => {
           clicksCount: 0,
           status: "Active",
           createdAt: data.link.createdAt || new Date().toISOString(),
+          expiresAt: data.link.expiresAt || null, 
         });
       }
 
-      router.refresh();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -123,10 +122,7 @@ const Input = ({ onLinkAdded }: InputProps) => {
             </>
           ) : (
             <>
-              {/* Visible on screens above 480px */}
               <span className="max-[480px]:hidden">Shorten Now!</span>
-              
-              {/* Visible only on screens 480px and below */}
               <span className="hidden max-[480px]:block">
                 <FiArrowUp size={20} />
               </span>
