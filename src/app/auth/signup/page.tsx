@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiMail, FiLock } from "react-icons/fi";
-import { signIn } from "@/lib/auth";
+import { signIn } from "next-auth/react";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
