@@ -23,7 +23,7 @@ export default function Home() {
 
       {/* table section — below the fold */}
       <div className="z-10 w-full px-10 pb-10">
-        <LinksTable />
+        <LinksTable isSample={true} />
       </div>
     </div>
   );

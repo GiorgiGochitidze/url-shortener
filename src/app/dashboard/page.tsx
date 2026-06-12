@@ -1,10 +1,8 @@
-// app/dashboard/page.tsx
-import Input from "@/components/Input";
-import LinksTable from "@/components/LinksTable";
+import DashboardWrapper from "@/components/DashboardWrapper";
 
 export default function DashboardPage() {
   return (
-    <div className=" w-full min-h-screen p-10 text-white pt-28 z-10">
+    <div className="w-full min-h-screen p-10 text-white pt-28 z-10">
       <div className="w-full h-auto mx-auto flex flex-col gap-10">
         <div>
           <h1 className="text-3xl font-bold">Your Link Dashboard</h1>
@@ -13,8 +11,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <Input />
-        <LinksTable />
+        <DashboardWrapper />
       </div>
     </div>
   );
