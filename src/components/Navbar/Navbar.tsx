@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const isLoading = status === "loading";
   return (
-    <header className="backdrop-blur-md z-11 w-full h-20 p-5 flex items-center justify-between fixed top-0 left-0">
+    <header className="max-[360px]:flex-col max-[360px]:gap-2 backdrop-blur-md z-11 w-full h-20 p-5 flex items-center justify-between fixed top-0 left-0">
       <Link href="/">
         <p className="text-[#144EE3] font-bold text-2xl cursor-pointer">Linkly</p>
       </Link>

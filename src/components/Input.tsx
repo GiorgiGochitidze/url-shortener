@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FiLink, FiCopy, FiCheck } from "react-icons/fi";
+import { FiLink, FiCopy, FiCheck, FiArrowUp } from "react-icons/fi";
 
 interface ClickItem {
   timestamp: string;
@@ -104,7 +104,7 @@ const Input = ({ onLinkAdded }: InputProps) => {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           disabled={loading}
-          className="w-full h-15 text-white outline-none rounded-full pl-12 pr-44 border-3 border-[#353C4A] bg-[#181E29] disabled:opacity-50"
+          className="w-full h-15 text-white outline-none rounded-full pl-12 pr-44 max-[480px]:pr-16 border-3 border-[#353C4A] bg-[#181E29] disabled:opacity-50"
           aria-label="url"
           placeholder={
             loading ? "Generating your slug..." : "Enter the link here"
@@ -114,9 +114,24 @@ const Input = ({ onLinkAdded }: InputProps) => {
         <button
           type="submit"
           disabled={loading || !url}
-          className="bg-[#144EE3] outline-none hover:cursor-pointer absolute text-white font-bold right-1.5 px-10 rounded-full h-12 drop-shadow-[#144EE3] disabled:bg-slate-700 disabled:cursor-not-allowed transition-all"
+          className="bg-[#144EE3] outline-none hover:cursor-pointer absolute text-white font-bold right-1.5 px-10 max-[480px]:px-0 max-[480px]:w-12 rounded-full h-12 max-[480px]:flex max-[480px]:items-center max-[480px]:justify-center drop-shadow-[#144EE3] disabled:bg-slate-700 disabled:cursor-not-allowed transition-all"
         >
-          {loading ? "Shortening..." : "Shorten Now!"}
+          {loading ? (
+            <>
+              <span className="max-[480px]:hidden">Shortening...</span>
+              <span className="hidden max-[480px]:inline animate-spin">⏳</span>
+            </>
+          ) : (
+            <>
+              {/* Visible on screens above 480px */}
+              <span className="max-[480px]:hidden">Shorten Now!</span>
+              
+              {/* Visible only on screens 480px and below */}
+              <span className="hidden max-[480px]:block">
+                <FiArrowUp size={20} />
+              </span>
+            </>
+          )}
         </button>
       </form>
 
